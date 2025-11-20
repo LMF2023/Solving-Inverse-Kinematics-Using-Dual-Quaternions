@@ -1,0 +1,159 @@
+%%%% Solution Process
+theta2_sin = sin(theta2);
+theta2_cos = cos(theta2);
+theta22_cos = cos(2 * theta2);
+theta22_sin = sin(2 * theta2);
+
+r1_theta1 = [r1,    r2,   -r3, -r4;
+    r4,    r3,     0,  0;
+    r3,    -r4,    0,   0;
+    r6,    -r5,    r8, -r7;
+    r7,    -r8,    -r5,    r6;
+    r8,    r7,     -r6,    -r5;
+    r2,    -r3,    r4,     -r1;
+    r1,    -r2,    r3,    -r4;
+    r2,    r3,     r4,     r1;
+    r4,    -r3,    0,      0;
+    r2,    0,      r4,     0;
+    r1,    -r2,    -r3,    r4;
+    r2,    0,  -r4,    0;
+    r3,    r4, 0   ,0];
+rr1_th12 = r1_theta1 * [r1;   r2; r3; r4];
+b10 = -(1 - theta22_cos) * (rr1_th12(6) + a8 * rr1_th12(3));
+b11 = (1 - theta22_cos) * (rr1_th12(5) - a8 * rr1_th12(2));
+b12 = ((a0 - a8*rr1_th12(1) + 2 * rr1_th12(4)) * theta2_cos + a2 + a4 +a6) * theta2_sin;
+
+b10_squ = b10^2;
+b11_squ = b11^2;
+b12_squ = b12^2;
+
+theta1_set = zeros(2,1);
+theta_fai1 = atan2(b11, b10);
+theta1_set(1) = atan2(b12, sqrt(b10_squ + b11_squ - b12_squ)) - theta_fai1;
+theta1_set(2) = atan2(b12, -sqrt(b10_squ + b11_squ - b12_squ)) - theta_fai1;
+
+theta6_set = zeros(2,2);
+theta7_set = zeros(2,2);
+theta4_set = zeros(4,2);
+theta3_set = zeros(4,2);
+theta5_set = zeros(4,2);
+kkk = 1;
+for iii = 1 : 2
+    theta1 = theta1_set(iii);
+    theta1_sin = sin(theta1);
+    theta1_cos = cos(theta1);
+    p_711 = -rr1_th12(1) * theta2_cos + 2 * theta2_sin * (rr1_th12(2) * theta1_cos + rr1_th12(3) * theta1_sin);
+
+    p711_sqr = sqrt(1 - p_711^2);
+
+    theta6_set(iii, 1) = atan2(p711_sqr, p_711);
+    theta6_set(iii, 2) = atan2(-p711_sqr, p_711);
+    for jjj = 1 : 2
+        theta6 = theta6_set(iii, jjj);
+        theta6_sin = sin(theta6);
+        theta6_cos = cos(theta6);
+
+        t1_theta67 = [sin(2*theta2+theta1); cos(2*theta2+theta1);   sin(2*theta2-theta1);   cos(2*theta2-theta1);   theta22_sin;  theta22_cos;  theta1_sin;    theta1_cos;    1];
+        r1_theta67 = [2*rr1_th12(7),   2*rr1_th12(3)-rr1_th12(8), -2*rr1_th12(9),    -2*rr1_th12(3)-rr1_th12(8),    4*rr1_th12(10),  2*rr1_th12(1),  -4*rr1_th12(11), 2*rr1_th12(8),  2*rr1_th12(1);
+            2*rr1_th12(3)-rr1_th12(8),   -2*rr1_th12(7), -2*rr1_th12(3)-rr1_th12(8),   2*rr1_th12(9),  -4*rr1_th12(10),  -4*rr1_th12(10), -4*rr1_th12(3),  -4*rr1_th12(2),  -4*rr1_th12(10)];
+        rt1_theta67 = r1_theta67 * t1_theta67;
+
+        pai_322 = 0.25*rt1_theta67(1);
+        pai_323 = -0.25*rt1_theta67(2);
+        pai_324 = theta1_sin * theta2_sin * rr1_th12(12) + 2 * (rr1_th12(13) * theta1_cos * theta2_sin + rr1_th12(14) * theta2_cos);
+
+        if theta6_sin == 0     
+            theta7_set(iii, jjj) = 0;
+        else
+            if theta2_sin == 0
+                theta7_set(iii, jjj) = atan2(-pai_324/theta6_sin, -pai_323/(theta2_cos * theta6_sin));
+            else
+                theta7_set(iii, jjj) = atan2(-pai_324/theta6_sin, (pai_322 + theta2_cos * theta6_cos)/(-theta2_sin * theta6_sin));
+            end
+        end
+
+        theta7 = theta7_set(iii, jjj);
+
+        theta_76 = 0.5*(theta7 + theta6);
+        theta_7fu6 = 0.5*(theta7 - theta6);
+        theta_21 = 0.5*(theta2 + theta1);
+        theta_2fu1 = 0.5*(theta2 - theta1);
+
+        Item1_7621 = theta_76 - theta_2fu1;
+        Item2_7621 = theta_76 - theta_21;
+        Item3_7621 = theta_7fu6 + theta_21;
+        Item4_7621 = theta_7fu6 + theta_2fu1;
+
+        Item5_7621 = theta_76 + theta_21;
+        Item6_7621 = theta_76 + theta_2fu1;
+        Item7_7621 = theta_7fu6 - theta_2fu1;
+        Item8_7621 = theta_7fu6 - theta_21;
+
+        Coeffi_theta1267 = [sin(Item1_7621),    sin(Item3_7621),    sin(Item5_7621),    sin(Item7_7621);
+            cos(Item1_7621),    cos(Item3_7621),    cos(Item5_7621),    cos(Item7_7621);
+            sin(Item2_7621),    sin(Item4_7621),    sin(Item6_7621),    sin(Item8_7621);
+            cos(Item2_7621),    cos(Item4_7621),    cos(Item6_7621),    cos(Item8_7621)];
+        Coeffi_theta345 = [-r3,     -r4,        r1,     -r2;
+            -r3,     -r4,        -r1,    r2;
+            -r4,     r3,         r2,     r1;
+            -r4,     r3,         -r2,    -r1];
+        theta345_Sin = 0.5*(Coeffi_theta345(1,:) * Coeffi_theta1267(:,1) + Coeffi_theta345(2,:) * Coeffi_theta1267(:,2));
+        theta345_Cos = 0.5*(Coeffi_theta345(3,:) * Coeffi_theta1267(:,3) + Coeffi_theta345(4,:) * Coeffi_theta1267(:,4));
+
+        theta_345 = 2 * atan2(theta345_Sin, theta345_Cos);
+
+        AA_1357 = a1 + a3 + a5 + a7;
+        AA_08 = a8 + a0;
+        AA_8fu0 = a8 - a0;
+
+        AA_0246 = 2*a0 + a2 + a4 + a6;
+        AAA_07 = AA_08 + AA_1357;
+        AAA_0fu7 = AA_08 - AA_1357;
+        AAAA_07 = AA_8fu0 + AA_1357;
+        AAAA_0fu7 = AA_8fu0 - AA_1357;
+        Coeffi1_A08 = [-(AAA_07*r3 + 2*r8),     2*r7-AAA_07*r4,     AAAA_07*r1-2*r6,      -(AAAA_07*r2+2*r5);
+            AAA_0fu7*r3+2*r8,        AAA_0fu7*r4-2*r7,   AAAA_0fu7*r1-2*r6,    -AAAA_0fu7*r2-2*r5;
+            AA_0246*r3,              AA_0246*r4,         AA_0246*r1,           -AA_0246*r2;
+            -AA_0246*r3,             -AA_0246*r4,        AA_0246*r1,           -AA_0246*r2];
+        Item_A267 = 0.25*(Coeffi1_A08(1,:)*Coeffi_theta1267(:,1) + Coeffi1_A08(2,:)*Coeffi_theta1267(:,2) + Coeffi1_A08(3,:)*Coeffi_theta1267(:,3) + Coeffi1_A08(4,:)*Coeffi_theta1267(:,4));
+        Coeffi2_A08 = [AA_0246*r4,      -AA_0246*r3,        AA_0246*r2,     AA_0246*r1;
+            -AA_0246*r4,     AA_0246*r3,         AA_0246*r2,     AA_0246*r1;
+            2*r7-AAA_07*r4,  AAA_07*r3+2*r8,     AAAA_07*r2+2*r5,    AAAA_07*r1-2*r6;
+            AAA_0fu7*r4-2*r7,    -AAA_0fu7*r3-2*r8,      AAAA_0fu7*r2+2*r5,      AAAA_0fu7*r1-2*r6];
+        Item_A268 = 0.25*(Coeffi2_A08(1,:)*Coeffi_theta1267(:,1) + Coeffi2_A08(2,:)*Coeffi_theta1267(:,2) + Coeffi2_A08(3,:)*Coeffi_theta1267(:,3) + Coeffi2_A08(4,:)*Coeffi_theta1267(:,4));
+
+        Coeffi_D26 = 2*(AA_1357-a7)*theta345_Sin*theta345_Cos - 2*(theta345_Cos*Item_A267+theta345_Sin*Item_A268);
+        Coeffi_F26 = (AA_1357-a7)*(theta345_Cos^2 - theta345_Sin^2) - a1 - 2*(theta345_Cos*Item_A268 - theta345_Sin*Item_A267);
+        theta4_Cos = (Coeffi_D26^2 + Coeffi_F26^2 - a3^2-a5^2)/(2*a3*a5);
+
+        theta4_set(kkk, 1) = acos(theta4_Cos);
+        theta4_set(kkk, 2) = -acos(theta4_Cos);
+
+        for mmm = 1 : 2
+            theta4 = theta4_set(kkk, mmm);
+
+            if ~isreal(theta4)
+                theta4 = imag(theta4);
+            end
+
+            theta4_sin = sin(theta4);
+            theta4_cos = cos(theta4);
+
+            if theta4_cos == -1         
+                theta3_set(kkk, mmm) = 0;
+                theta5_set(kkk, mmm) = 0;
+            else
+                Coffi_theta4Cos = a3 + a5*theta4_cos;
+                Coffi_theta4Sin = a5*theta4_sin;
+                Coeffi_theta4 = [Coffi_theta4Cos,    -Coffi_theta4Sin;
+                    Coffi_theta4Sin,    Coffi_theta4Cos];
+                Coeffi_theta3 = Coeffi_theta4*[Coeffi_D26;  Coeffi_F26];
+
+                theta3_set(kkk, mmm) = atan2(Coeffi_theta3(1), Coeffi_theta3(2));
+                theta5_set(kkk, mmm) = theta_345 - theta3_set(kkk, mmm) - theta4;
+            end
+
+        end
+        kkk = kkk + 1;
+    end
+end
